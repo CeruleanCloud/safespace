@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeSpace — Activities</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- p5.js Library for your game -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+<body>
+
+  <!-- Custom Cursor Element -->
+  <div class="custom-cursor"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="logo-icon"></span>
+      <span class="logo-text">SafeSpace</span>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="check-in.html" class="nav-item">Check-in</a>
+      <a href="activities.html" class="nav-item active">Activities</a>
+      <button id="themeToggleBtn" class="nav-btn" aria-label="Toggle theme">Light Mode</button>
+    </nav>
+  </header>
+
+  <!-- Activities Container -->
+  <main class="hero-container activities-container">
+    
+    <!-- Dynamic Welcome Banner -->
+    <header class="activity-header">
+      <h1 class="hero-title" id="moodGreeting">Space Tailored for You</h1>
+      <p class="hero-description" id="moodSubtext">Explore tools designed to meet you right where you are.</p>
+    </header>
+
+    <!-- Activity Sections -->
+    <div class="activities-grid">
+
+      <!-- 1. Box Breathing Exercise -->
+      <section class="activity-card" id="breathing-section">
+        <h2>Box Breathing</h2>
+        <p class="activity-desc">Follow the rhythm: 4s inhale, 4s hold, 4s exhale, 4s hold.</p>
+        
+        <div class="breathing-widget">
+          <div class="breathing-circle-outer">
+            <div id="breathingCircle" class="breathing-circle-inner"></div>
+          </div>
+          <p id="breathInstruction" class="breath-text">Press start to begin</p>
+          <button id="startBreathingBtn" class="primary-btn">Start Breathing</button>
+        </div>
+      </section>
+
+      <!-- 2. Spotify Calming Music -->
+      <section class="activity-card" id="music-section">
+        <h2>Calming Sounds</h2>
+        <p class="activity-desc">Listen to curated ambient soundscapes to ease your mind.</p>
+        <div class="spotify-container">
+          <iframe 
+            style="border-radius:12px" 
+            src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpd3142_m?utm_source=generator&theme=0" 
+            width="100%" 
+            height="152" 
+            frameBorder="0" 
+            allowfullscreen="" 
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </section>
+
+      <!-- 3. Safe Journal -->
+      <section class="activity-card" id="journal-section">
+        <h2>Reflective Journal</h2>
+        <p class="activity-desc">Write down what's on your mind. Your text auto-saves locally on your device.</p>
+        <textarea id="journalInput" placeholder="How are you feeling right now? What thoughts are coming up?"></textarea>
+        <span id="journalStatus" class="saved-status">Saved locally</span>
+      </section>
+
+      <!-- 4. Affirmation Generator -->
+      <section class="activity-card" id="affirmation-section">
+        <h2>Positive Affirmation</h2>
+        <div class="affirmation-box">
+          <p id="affirmationText">"You are capable of handling whatever comes your way today."</p>
+        </div>
+        <button id="nextAffirmationBtn" class="primary-btn">New Affirmation</button>
+      </section>
+
+      <!-- 5. p5.js Interactive Game Placeholder -->
+      <section class="activity-card game-card" id="game-section">
+        <h2>Interactive Space</h2>
+        <p class="activity-desc">A gentle game to help focus and ground your attention.</p>
+        <div id="p5-canvas-container" class="game-container">
+          <!-- Your p5.js game canvas will render here -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>SAFESPACE</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
