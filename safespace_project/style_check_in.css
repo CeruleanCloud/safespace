@@ -4,6 +4,25 @@
     src: url('fonts/questrial.regular.ttf') format('truetype');
 }
 
+html, body {
+    cursor: none;
+}
+
+.custom-cursor {
+  width: 30px;
+  height: 30px;
+  opacity: 50%;
+  border: 2px solid blueviolet;
+  border-radius: 50%; /* Makes it a perfect circle */
+  position: fixed;
+  transform: translate(-50%, -50%); /* Centers the circle precisely on the cursor coordinate */
+  pointer-events: none; /* Allows you to click objects "through" the circle */
+  z-index: 9999; /* Keeps it on top of all other elements */
+  transition: transform 0.1s ease-out; /* Creates a smooth trailing lag effect */
+}
+
+
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -69,6 +88,14 @@ h1 {
 .emotion-card {
     font-size: 20px;
     text-align: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    appearance: none;
+    display: block;
 }
 
 .emotion-card img {
@@ -107,10 +134,10 @@ h1 {
 }
 
 #heavy_image {
-    width: 130px;
+    width: 100px;
     height: 110px;
     display: block;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .heavy_card p {
@@ -120,8 +147,12 @@ h1 {
 
 
 
+
 footer {
-    font-size: 24px;
+    
+    font-size: 20px;
+    background-color: #0b0733;
+
     display: flex;
     justify-content: center;
     align-items: center;

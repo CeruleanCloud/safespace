@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
-    <link rel ="stylesheet" href = "style.css">
-    
-
+    <link rel="stylesheet" href="style_check_in.css">
 </head>
 <body>
+<div class="custom-cursor"></div>
 <div class="header">
     <img id = "logo" src = "images/safespace_logo.png">
    <nav>
@@ -30,26 +29,27 @@
     </div>
 
     <div class="emotion-responses">
-
-    <div class="emotion-card bright_card">
+    
+    <button type="button" class="emotion-card bright_card">
         <img id = "bright_image" src="images/bright.png" alt="Bright">
         <p> Bright</p>
-    </div>
+    </button>
+    
 
-    <div class="emotion-card steady_card">
+    <button type="button" class="emotion-card steady_card">
         <img id = "steady_image" src="images/steady.png" alt="Steady">
         <p>Steady</p>
-    </div>
+    </button>
 
-    <div class="emotion-card heavy_card">
+    <button type="button" class="emotion-card heavy_card">
         <img id = "heavy_image" src="images/heavy.png" alt="Heavy">
         <p id = "heavy_caption"></span>Heavy</p>
-    </div>
+    </button>
 
-    <div class="emotion-card overloaded_card">
+    <button type="button" class="emotion-card overloaded_card">
         <img id = "overloaded_image" src="images/overloaded.png" alt="Overloaded">
         <p>Overloaded</p>
-    </div>
+    </button>
 
 </div>
 </section>
@@ -58,7 +58,7 @@
     
 
 <footer>
-    SafeSpace
+    SAFESPACE
 </footer>
     
     
@@ -73,5 +73,13 @@
 
 
     
+<script>
+const cursor = document.querySelector('.custom-cursor');
+
+window.addEventListener('mousemove', (e) => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+});
+</script>
 </body>
 </html>
