@@ -1,85 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-    <link rel="stylesheet" href="style_check_in.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeSpace — Check-In</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="custom-cursor"></div>
-<div class="header">
-    <img id = "logo" src = "images/safespace_logo.png">
-   <nav>
-        <div class="navbar">
-            <ul id="menu">
-                <li><a href="placeholder.html" class="tools">Journal</a></li>
-                <li><a href="placeholder.html" class="tools">Tracks</a></li>
-                <li><a href="placeholder.html" class="tools">Games</a></li>
-            </ul>
-        </div>
-   </nav>
-</div>
 
+  <!-- Custom Cursor Element -->
+  <div class="custom-cursor"></div>
 
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="logo-icon"></span>
+      <span class="logo-text">SafeSpace</span>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="check-in.html" class="nav-item active">Check-in</a>
+      <a href="activities.html" class="nav-item">Activities</a>
+      <button id="themeToggleBtn" class="nav-btn" aria-label="Toggle theme">Light Mode</button>
+    </nav>
+  </header>
 
-<section class="check-in">
-    <div id = "greeting">
-    <h1>Where's your mind at today?</h1>
+  <!-- Check-In Content Section -->
+  <main class="hero-container check-in-container">
+    <h1 class="hero-title">Where's your mind at today?</h1>
+    <p class="hero-description">Select the word that best fits how you're feeling right now.</p>
+
+    <!-- Emotion Selection Grid -->
+    <div class="emotion-grid">
+      <button type="button" class="emotion-card" data-emotion="bright">
+        <img id="bright_image" class="emotion-icon" src="images/bright.png" alt="Bright">
+        <p>Bright</p>
+      </button>
+
+      <button type="button" class="emotion-card" data-emotion="steady">
+        <img id="steady_image" class="emotion-icon" src="images/steady.png" alt="Steady">
+        <p>Steady</p>
+      </button>
+
+      <button type="button" class="emotion-card" data-emotion="heavy">
+        <img id="heavy_image" class="emotion-icon" src="images/heavy.png" alt="Heavy">
+        <p>Heavy</p>
+      </button>
+
+      <button type="button" class="emotion-card" data-emotion="overloaded">
+        <img id="overloaded_image" class="emotion-icon" src="images/overloaded.png" alt="Overloaded">
+        <p>Overloaded</p>
+      </button>
     </div>
 
-    <div class="emotion-responses">
-    
-    <button type="button" class="emotion-card bright_card">
-        <img id = "bright_image" src="images/bright.png" alt="Bright">
-        <p> Bright</p>
-    </button>
-    
+    <button id="submitCheckInBtn" class="primary-btn" disabled>Continue</button>
+    <button id="skipCheckInBtn" class="skip-btn" type="button">Skip for now</button>
+  </main>
 
-    <button type="button" class="emotion-card steady_card">
-        <img id = "steady_image" src="images/steady.png" alt="Steady">
-        <p>Steady</p>
-    </button>
+  <!-- Footer -->
+  <footer class="footer">
+    <p>SAFESPACE</p>
+  </footer>
 
-    <button type="button" class="emotion-card heavy_card">
-        <img id = "heavy_image" src="images/heavy.png" alt="Heavy">
-        <p id = "heavy_caption"></span>Heavy</p>
-    </button>
-
-    <button type="button" class="emotion-card overloaded_card">
-        <img id = "overloaded_image" src="images/overloaded.png" alt="Overloaded">
-        <p>Overloaded</p>
-    </button>
-
-</div>
-</section>
-
-
-    
-
-<footer>
-    SAFESPACE
-</footer>
-    
-    
-    
-    
-  <!--  <nav>
-        <a href="index.html">Home</a>
-        <a href="breathing_exercise.html">About</a>
-        <a href="journal.html">Contact</a>
-     </nav> -->
-
-
-
-    
-<script>
-const cursor = document.querySelector('.custom-cursor');
-
-window.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-});
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
