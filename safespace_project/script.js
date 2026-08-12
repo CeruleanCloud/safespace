@@ -112,43 +112,53 @@ document.addEventListener('DOMContentLoaded', function() {
   // 6. Box Breathing Logic
   // ==========================================================
   const startBreathingBtn = document.getElementById('startBreathingBtn');
-  const breathingCircle = document.getElementById('breathingCircle');
-  const breathInstruction = document.getElementById('breathInstruction');
-  let breathingInterval = null;
+const breathingCircle = document.getElementById('breathingCircle');
+const breathInstruction = document.getElementById('breathInstruction');
 
-  if (startBreathingBtn && breathingCircle && breathInstruction) {
-    startBreathingBtn.addEventListener('click', function() {
-      if (breathingInterval) {
-        clearInterval(breathingInterval);
-        breathingInterval = null;
-        breathingCircle.className = 'breathing-circle-inner';
-        breathInstruction.textContent = 'Press start to begin';
-        startBreathingBtn.textContent = 'Start Breathing';
-        return;
+let breathingInterval = null;
+
+if (startBreathingBtn && breathingCircle && breathInstruction) {
+  startBreathingBtn.addEventListener('click', function() {
+    if (breathingInterval) {
+      clearInterval(breathingInterval);
+      breathingInterval = null;
+      breathingCircle.className = 'breathing-circle-inner';
+      breathInstruction.textContent = 'Press start to begin';
+      startBreathingBtn.textContent = 'Start Breathing';
+      return;
+    }
+
+    startBreathingBtn.textContent = 'Stop';
+
+    const phases = [
+      { action: 'Inhale', class: 'inhale' },
+      { action: 'Hold',   class: 'inhale' },
+      { action: 'Exhale', class: 'exhale' },
+      { action: 'Hold',   class: 'exhale' }
+    ];
+
+    let step = 0;
+    let timeLeft = 4;
+
+    function timer() {
+      const currentPhase = phases[step];
+      
+      // Update text and circle scale
+      breathInstruction.textContent = `${currentPhase.action}... (${timeLeft}s)`;
+      breathingCircle.className = 'breathing-circle-inner ' + currentPhase.class;
+
+      if (timeLeft > 0) {
+        timeLeft--;
+      } else {
+        timeLeft = 4;
+        step = (step + 1) % 4; // Advance phase on reaching 0
       }
+    }
 
-      startBreathingBtn.textContent = 'Stop';
-      let step = 0;
-
-      function runPhase() {
-        if (step === 0) {
-          breathInstruction.textContent = 'Inhale... (4s)';
-          breathingCircle.className = 'breathing-circle-inner inhale';
-        } else if (step === 1) {
-          breathInstruction.textContent = 'Hold... (4s)';
-        } else if (step === 2) {
-          breathInstruction.textContent = 'Exhale... (4s)';
-          breathingCircle.className = 'breathing-circle-inner exhale';
-        } else if (step === 3) {
-          breathInstruction.textContent = 'Hold... (4s)';
-        }
-        step = (step + 1) % 4;
-      }
-
-      runPhase();
-      breathingInterval = setInterval(runPhase, 4000);
-    });
-  }
+    timer(); // Run immediately on click
+    breathingInterval = setInterval(timer, 1000);
+  });
+}
 
   // ==========================================================
   // 7. Auto-Saving Journal
