@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeSpace — Journal History</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Custom Cursor Element -->
+  <div class="custom-cursor"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="logo-icon"></span>
+      <span class="logo-text">SafeSpace</span>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="check-in.html" class="nav-item">Check-in</a>
+      <a href="activities.html" class="nav-item">Activities</a>
+      <button id="themeToggleBtn" class="nav-btn" aria-label="Toggle theme">Light Mode</button>
+    </nav>
+  </header>
+
+  <main class="hero-container journal-history-page">
+    <div class="journal-history-header">
+      <h1 class="hero-title">Past Journal Entries</h1>
+      <p class="hero-description">Look back on your experiences.</p>
+    </div>
+
+    <section class="journal-history-panel">
+      <p id="journalHistoryStatus" class="demo-status">Loading journal history...</p>
+      <div id="journalHistoryList" class="journal-history-list"></div>
+      <p id="journalHistoryEmpty" class="empty-state">No journal entries were found. Save one from the journal page to view it here.</p>
+    </section>
+
+    <button id="returnActivitiesBtn" class="primary-btn">Back to Activities</button>
+  </main>
+
+  <footer class="footer">
+    <p>SAFESPACE</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const formData = new FormData(demoForm);
       const createdDate = new Date().toISOString().slice(0, 10);
       const entry = {
-        id: formData.get('sampleId') || `sample-${Date.now()}`,
+        id: Math.floor(Math.random() * 1000000000),
         title: String(formData.get('title') || '').trim(),
         mood: String(formData.get('mood') || '').trim(),
         content: String(formData.get('content') || '').trim(),
@@ -272,8 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         demoForm.reset();
-        const sampleIdInput = document.getElementById('sampleId');
-        if (sampleIdInput) sampleIdInput.value = `sample-${Date.now()}`;
       } catch (error) {
         console.error('Supabase demo save failed:', error);
         if (demoStatus) {
@@ -284,6 +282,200 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+  const journalHistoryList = document.getElementById('journalHistoryList');
+  const journalHistoryStatus = document.getElementById('journalHistoryStatus');
+  const journalHistoryEmpty = document.getElementById('journalHistoryEmpty');
+  const returnActivitiesBtn = document.getElementById('returnActivitiesBtn');
+  const viewJournalHistoryBtn = document.getElementById('viewJournalHistoryBtn');
+
+  const moodStickerMap = {
+    bright: { src: 'images/bright.png', alt: 'Bright' },
+    steady: { src: 'images/steady.png', alt: 'Steady' },
+    heavy: { src: 'images/heavy.png', alt: 'Heavy' },
+    overloaded: { src: 'images/overloaded.png', alt: 'Overloaded' }
+  };
+
+  if (returnActivitiesBtn) {
+    returnActivitiesBtn.addEventListener('click', function() {
+      window.location.href = 'activities.html';
+    });
+  }
+
+  if (viewJournalHistoryBtn) {
+    viewJournalHistoryBtn.addEventListener('click', function() {
+      window.location.href = 'journal-history.html';
+    });
+  }
+
+  async function readLocalJournalHistory() {
+    try {
+      const stored = JSON.parse(localStorage.getItem('safespace_journal_history') || '[]');
+      return Array.isArray(stored) ? stored : [];
+    } catch (err) {
+      console.warn('Failed to parse local journal history', err);
+      return [];
+    }
+  }
+
+  async function fetchJournalRowsViaRest(orderColumn) {
+    const orderSegment = orderColumn ? `&order=${orderColumn}.desc` : '';
+    const url = `${demoSupabaseUrl}/rest/v1/${demoTableName}?select=*&limit=1000${orderSegment}`;
+    const headers = {
+      apikey: demoSupabaseAnonKey,
+      Authorization: `Bearer ${demoSupabaseAnonKey}`,
+      Accept: 'application/json'
+    };
+
+    const response = await fetch(url, { headers });
+    if (!response.ok) {
+      throw new Error(`REST fetch failed: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  function getJournalValue(entry, keys) {
+    for (const key of keys) {
+      if (entry[key] !== undefined && entry[key] !== null && String(entry[key]).trim() !== '') {
+        return entry[key];
+      }
+    }
+    return null;
+  }
+
+  async function loadJournalHistory() {
+    if (!journalHistoryList) return;
+    console.log('Journal history loader starting');
+    if (journalHistoryStatus) journalHistoryStatus.textContent = 'Loading journal history...';
+
+    const localFallback = await readLocalJournalHistory();
+
+    if (!demoSupabase) {
+      if (journalHistoryEmpty) {
+        journalHistoryEmpty.textContent = 'Unable to load journal entries: Supabase is not configured or the library is missing.';
+        journalHistoryEmpty.style.display = 'block';
+      }
+      if (localFallback.length > 0) {
+        renderJournalEntries(localFallback);
+        if (journalHistoryStatus) journalHistoryStatus.textContent = 'Loaded local journal entries as a fallback.';
+      }
+      return;
+    }
+
+    try {
+      let response = await demoSupabase
+        .from(demoTableName)
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(1000);
+
+      console.log('Supabase journal response', response);
+      if (response.error) {
+        console.warn('Supabase client returned an error:', response.error);
+        if (journalHistoryStatus) journalHistoryStatus.textContent = `Supabase error: ${response.error.message || response.error}`;
+        response = { data: await fetchJournalRowsViaRest('created_at'), error: null };
+      }
+
+      let { data, error } = response;
+      if (error) {
+        console.warn('Supabase client error object:', error);
+        if (journalHistoryStatus) journalHistoryStatus.textContent = `Supabase error: ${error.message || error}`;
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        try {
+          data = await fetchJournalRowsViaRest('created_at');
+        } catch (restErr) {
+          console.warn('REST fallback failed for created_at ordering:', restErr);
+          data = await fetchJournalRowsViaRest();
+        }
+      }
+
+      if (!data || data.length === 0) {
+        if (localFallback.length > 0) {
+          renderJournalEntries(localFallback);
+          if (journalHistoryStatus) journalHistoryStatus.textContent = 'Loaded local journal entries as a fallback.';
+          return;
+        }
+
+        if (journalHistoryEmpty) {
+          journalHistoryEmpty.textContent = 'No journal entries were returned from the database.';
+          journalHistoryEmpty.style.display = 'block';
+        }
+        return;
+      }
+
+      if (journalHistoryEmpty) journalHistoryEmpty.style.display = 'none';
+      if (journalHistoryStatus) journalHistoryStatus.textContent = `Loaded ${data.length} journal entries.`;
+      renderJournalEntries(data);
+    } catch (error) {
+      console.error('Failed to load journal history:', error);
+      if (journalHistoryEmpty) {
+        journalHistoryEmpty.textContent = `There was a problem loading journal entries: ${error.message || error}`;
+        journalHistoryEmpty.style.display = 'block';
+      }
+      if (localFallback.length > 0) {
+        renderJournalEntries(localFallback);
+        if (journalHistoryStatus) journalHistoryStatus.textContent = 'Loaded local journal entries as a fallback.';
+      }
+    }
+  }
+
+  function renderJournalEntries(entries) {
+    if (journalHistoryEmpty) journalHistoryEmpty.style.display = 'none';
+    if (journalHistoryStatus) journalHistoryStatus.style.display = 'block';
+    journalHistoryList.innerHTML = '';
+
+    entries.forEach(entry => {
+      const item = document.createElement('article');
+      item.className = 'journal-history-item';
+
+      const header = document.createElement('div');
+      header.className = 'journal-history-item-header';
+
+      const date = document.createElement('div');
+      date.className = 'journal-history-date';
+      const createdAtValue = getJournalValue(entry, ['created_at', 'createdAt', 'inserted_at', 'insertedAt', 'date', 'timestamp']);
+      const createdDate = createdAtValue ? new Date(createdAtValue) : new Date();
+      date.textContent = createdDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+
+      const moodValue = getJournalValue(entry, ['mood', 'feeling', 'emotion', 'status']);
+      const mood = document.createElement('div');
+      mood.className = 'mood-sticker';
+      const moodDef = moodStickerMap[String(moodValue || '').toLowerCase()];
+      if (moodDef) {
+        const sticker = document.createElement('img');
+        sticker.src = moodDef.src;
+        sticker.alt = moodDef.alt;
+        sticker.title = moodDef.alt;
+        mood.appendChild(sticker);
+      } else {
+        mood.textContent = moodValue || 'Unknown';
+      }
+
+      header.appendChild(date);
+      header.appendChild(mood);
+
+      const titleValue = getJournalValue(entry, ['title', 'heading', 'summary', 'entry_title']);
+      const title = document.createElement('h2');
+      title.className = 'journal-history-title';
+      title.textContent = titleValue || 'Untitled entry';
+
+      const contentValue = getJournalValue(entry, ['content', 'note', 'entry', 'journal', 'description']);
+      const content = document.createElement('p');
+      content.className = 'journal-history-content';
+      content.textContent = contentValue || '';
+
+      item.appendChild(header);
+      item.appendChild(title);
+      item.appendChild(content);
+      journalHistoryList.appendChild(item);
+    });
+  }
+
+  loadJournalHistory();
 });
 
 // ==========================================================

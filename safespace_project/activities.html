@@ -91,15 +91,10 @@
 
       <!-- 5. Demo Supabase Entry -->
       <section class="activity-card" id="demo-supabase-section">
-        <h2>Demo API Save</h2>
-        <p class="activity-desc">Stores a sample ID, title, mood, and content in a Supabase table. Replace the demo URL and key below with your project values.</p>
+        <h2>Reflective Journal</h2>
+        <p class="activity-desc">Write down how you feel in the moment, then save it as a new entry. Your response is stored locally and available to view later.</p>
 
         <form id="demoEntryForm" class="demo-entry-form">
-          <label>
-            Sample ID
-            <input type="text" id="sampleId" name="sampleId" value="sample-001" required>
-          </label>
-
           <label>
             Title
             <input type="text" id="entryTitle" name="title" placeholder="Checking in" required>
@@ -120,8 +115,9 @@
             <textarea id="entryContent" name="content" rows="4" placeholder="Write a brief note..." required></textarea>
           </label>
 
-          <button type="submit" class="primary-btn">Save to Demo API</button>
+          <button type="submit" class="primary-btn">Save Journal Entry</button>
           <p id="demoStatus" class="demo-status">Ready</p>
+          <a id="viewJournalHistoryBtn" href="journal-history.html" class="primary-btn secondary-btn">View Journal History</a>
         </form>
       </section>
 
