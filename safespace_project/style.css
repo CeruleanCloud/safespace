@@ -20,7 +20,7 @@ body.light-theme {
   --surface-color: #7d3a36; /* 30% Secondary */
   --accent-color: #cc335d;  /* 10% Accent */
   --text-main: #1a1a1a;
-  --text-muted: #555555;
+  --text-muted: #000000;
   --nav-inactive: #7d3a36;
 }
 
