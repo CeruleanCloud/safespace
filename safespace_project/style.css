@@ -415,6 +415,45 @@ a, button {
   line-height: 1.5;
 }
 
+.demo-entry-form {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.demo-entry-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.demo-entry-form input,
+.demo-entry-form select,
+.demo-entry-form textarea {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  border: 1px solid var(--accent-color);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font: inherit;
+}
+
+.demo-entry-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.demo-status {
+  min-height: 20px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* Spotify Container */
 .spotify-container {
   width: 100%;

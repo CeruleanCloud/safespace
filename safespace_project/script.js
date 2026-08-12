@@ -188,6 +188,102 @@ document.addEventListener('DOMContentLoaded', function() {
       affirmationText.textContent = `"${affirmations[randomIndex]}"`;
     });
   }
+
+  // ==========================================================
+  // 10. Demo Supabase Save
+  // ==========================================================
+  const demoForm = document.getElementById('demoEntryForm');
+  const demoStatus = document.getElementById('demoStatus');
+
+  // Supabase project configuration — set to your project values
+  const demoSupabaseUrl = 'https://ekostfaplnkumdhhggrl.supabase.co';
+  const demoSupabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrb3N0ZmFwbG5rdW1kaGhnZ3JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NTQ0NzgsImV4cCI6MjEwMjAzMDQ3OH0.ma4LysG76TvISZzTyoMrFikV2sEz9ogLL4pjj538dM0';
+  const demoTableName = 'journal_entries';
+  // Considered configured when values are not the default placeholders
+  const hasDemoSupabaseConfig =
+    demoSupabaseUrl !== 'https://your-project-id.supabase.co' &&
+    demoSupabaseAnonKey !== 'your-anon-key';
+
+  let demoSupabase = null;
+
+  // Better diagnostics for initialization issues
+  if (!hasDemoSupabaseConfig) {
+    if (demoStatus) demoStatus.textContent = 'Demo mode: Supabase not configured (placeholder values present).';
+  } else if (!window.supabase) {
+    if (demoStatus) demoStatus.textContent = 'Supabase library not found. Check CDN script include.';
+    console.warn('window.supabase is undefined — verify the CDN script loaded before script.js');
+  } else if (typeof window.supabase.createClient !== 'function') {
+    if (demoStatus) demoStatus.textContent = 'Supabase createClient() not available on window.supabase.';
+    console.warn('window.supabase.createClient is not a function', window.supabase);
+  } else {
+    try {
+      demoSupabase = window.supabase.createClient(demoSupabaseUrl, demoSupabaseAnonKey);
+      if (demoStatus) demoStatus.textContent = 'Supabase client initialized.';
+      console.info('Supabase client created for', demoSupabaseUrl);
+    } catch (initErr) {
+      console.error('Failed to initialize Supabase client', initErr);
+      if (demoStatus) demoStatus.textContent = 'Failed to initialize Supabase client. See console.';
+    }
+  }
+
+  if (demoForm) {
+    demoForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const formData = new FormData(demoForm);
+      const createdDate = new Date().toISOString().slice(0, 10);
+      const entry = {
+        id: formData.get('sampleId') || `sample-${Date.now()}`,
+        title: String(formData.get('title') || '').trim(),
+        mood: String(formData.get('mood') || '').trim(),
+        content: String(formData.get('content') || '').trim(),
+        created_at: createdDate
+      };
+
+      if (!entry.title || !entry.mood || !entry.content) {
+        if (demoStatus) {
+          demoStatus.textContent = 'Please fill in all fields.';
+          demoStatus.style.color = '#ffb3b3';
+        }
+        return;
+      }
+
+      if (demoStatus) {
+        demoStatus.textContent = 'Saving...';
+        demoStatus.style.color = 'inherit';
+      }
+
+      try {
+        if (demoSupabase) {
+          const { error } = await demoSupabase.from(demoTableName).insert([entry]);
+          if (error) throw error;
+
+          if (demoStatus) {
+            demoStatus.textContent = 'Saved to Supabase demo table.';
+            demoStatus.style.color = '#90ee90';
+          }
+        } else {
+          localStorage.setItem('safe_space_demo_entry', JSON.stringify(entry));
+
+          if (demoStatus) {
+            demoStatus.textContent = 'Demo mode active: saved locally. Add your Supabase URL/key to enable live saves.';
+            demoStatus.style.color = '#ffd166';
+          }
+        }
+
+        demoForm.reset();
+        const sampleIdInput = document.getElementById('sampleId');
+        if (sampleIdInput) sampleIdInput.value = `sample-${Date.now()}`;
+      } catch (error) {
+        console.error('Supabase demo save failed:', error);
+        if (demoStatus) {
+          const msg = error && error.message ? error.message : String(error);
+          demoStatus.textContent = `Save failed: ${msg}`;
+          demoStatus.style.color = '#ffb3b3';
+        }
+      }
+    });
+  }
 });
 
 // ==========================================================

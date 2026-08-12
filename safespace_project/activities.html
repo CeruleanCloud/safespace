@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <!-- p5.js Library for your game -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -86,6 +87,42 @@
           <p id="affirmationText">"You are capable of handling whatever comes your way today."</p>
         </div>
         <button id="nextAffirmationBtn" class="primary-btn">New Affirmation</button>
+      </section>
+
+      <!-- 5. Demo Supabase Entry -->
+      <section class="activity-card" id="demo-supabase-section">
+        <h2>Demo API Save</h2>
+        <p class="activity-desc">Stores a sample ID, title, mood, and content in a Supabase table. Replace the demo URL and key below with your project values.</p>
+
+        <form id="demoEntryForm" class="demo-entry-form">
+          <label>
+            Sample ID
+            <input type="text" id="sampleId" name="sampleId" value="sample-001" required>
+          </label>
+
+          <label>
+            Title
+            <input type="text" id="entryTitle" name="title" placeholder="Checking in" required>
+          </label>
+
+          <label>
+            Mood
+            <select id="entryMood" name="mood" required>
+              <option value="bright">Bright</option>
+              <option value="steady">Steady</option>
+              <option value="heavy">Heavy</option>
+              <option value="overloaded">Overloaded</option>
+            </select>
+          </label>
+
+          <label>
+            Content
+            <textarea id="entryContent" name="content" rows="4" placeholder="Write a brief note..." required></textarea>
+          </label>
+
+          <button type="submit" class="primary-btn">Save to Demo API</button>
+          <p id="demoStatus" class="demo-status">Ready</p>
+        </form>
       </section>
 
       <!-- 5. p5.js Interactive Game Placeholder -->
